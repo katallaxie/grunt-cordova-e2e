@@ -1,0 +1,54 @@
+{
+  "name": "grunt-cordova-e2e",
+  "description": "A grunt plugin to run e2e test for your Cordova project",
+  "version": "0.1.0",
+  "homepage": "https://github.com/katallaxie/grunt-cordova-e2e",
+  "author": {
+    "name": "Sebastian Döll",
+    "url": "sebastian@pixelmilk.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/katallaxie/grunt-cordova-e2e.git"
+  },
+  "bugs": {
+    "url": "https://github.com/katallaxie/grunt-cordova-e2e/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT"
+    }
+  ],
+  "main": "Gruntfile.js",
+  "engines": {
+    "node": ">= 5.3.0"
+  },
+  "scripts": {
+    "test": "grunt test"
+  },
+  "devDependencies": {
+    "eslint": "^1.10.3",
+    "grunt": "^0.4.5",
+    "grunt-cli": "^0.1.13",
+    "grunt-contrib-clean": "^0.7.0",
+    "grunt-eslint": "^17.3.1",
+    "nightwatch": "^0.8.15"
+  },
+  "peerDependencies": {
+    "grunt": "^0.4.5"
+  },
+  "keywords": [
+    "gruntplugin",
+    "grunt",
+    "cordova",
+    "cordova-cli",
+    "phonegap"
+  ],
+  "directories": {},
+  "license": "SEE LICENSE IN LICSENSE",
+  "dependencies": {
+    "async": "^1.5.2",
+    "chromedriver": "^2.20.0",
+    "selenium-standalone-jar": "^2.48.2"
+  }
+}
