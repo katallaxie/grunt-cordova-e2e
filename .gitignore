@@ -21,4 +21,4 @@ _SpecRunner.html
 .VolumeIcon.icns
 node_modules
 nightwatch.json
-__nightwatch__
+.nightwatch.json

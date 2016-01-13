@@ -15,9 +15,14 @@ module.exports = (grunt) => {
     e2e  : {
       all: {
         options : {
-          'src_folders': [
-            'test/uat'
-          ]
+          'test_settings': {
+            'ios_9_2_ipad_pro': {
+              'launch_url': 'http://127.0.0.1:4723'
+            }
+          }
+        },
+        'settings': {
+          
         }
       }
     },

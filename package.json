@@ -49,6 +49,8 @@
   "dependencies": {
     "async": "^1.5.2",
     "chromedriver": "^2.20.0",
-    "selenium-standalone-jar": "^2.48.2"
+    "selenium-standalone-jar": "^2.48.2",
+    "shell": "^0.3.2",
+    "simctl": "0.0.8"
   }
 }
