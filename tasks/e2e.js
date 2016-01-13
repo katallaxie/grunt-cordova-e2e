@@ -139,6 +139,5 @@ module.exports = grunt => {
       // end, if there is nothing in the queue
       done();
     }
-
   });
 };
