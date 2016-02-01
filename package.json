@@ -49,6 +49,7 @@
   "dependencies": {
     "async": "^1.5.2",
     "chromedriver": "^2.20.0",
+    "deepmerge": "^0.2.10",
     "live-server": "^0.9.1",
     "selenium-standalone-jar": "^2.48.2",
     "shell": "^0.3.2",

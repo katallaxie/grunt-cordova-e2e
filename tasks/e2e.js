@@ -19,7 +19,7 @@ module.exports = grunt => {
   // consts
   const runner = path.resolve(path.dirname(require.resolve('nightwatch')), '../bin/runner.js');
   const args = ['-c', hack];
-  const presets = [].concat(require('../lib/ios'));
+  const presets = [].concat( require('../lib/ios'), require('../lib/phantom') );
 
   // defaults
   const settings = {
@@ -28,7 +28,6 @@ module.exports = grunt => {
     'src_folders': [],
     // global parameters
     // usage: browser.globals.$variable
-    // 'globals_path': 'globals.json',
     // defaults of selenium;
     // yet not starting process
     'selenium': {
@@ -49,9 +48,10 @@ module.exports = grunt => {
         'webdriver.chrome.driver': require('chromedriver').path,
         'webdriver.ie.driver': ''
       },
-      "test_workers" : {
-        "enabled" : true,
-        "workers" : "auto"
+      // this is for multi-threading
+      'test_workers' : {
+        'enabled' : true,
+        'workers' : 'auto'
       }
     },
     'test_settings': {
@@ -81,7 +81,7 @@ module.exports = grunt => {
         opts: {
           stdio: 'inherit'
         },
-        env: util._extend({}, process.env)
+        env: util._extend( {}, process.env )
       }, (error, result, code) => {
         callback(code !== 0 ? `Running test failed with ${code}` : null, `Success -> Running ${env}`);
       });
@@ -94,16 +94,16 @@ module.exports = grunt => {
     let done = this.async(),
       tasks = [],
       options,
-      env,
-      params;
+      env;
 
     // defaults
     options = this.options(settings, this.data.settings);
 
     // deepmerge presets on the settings
-    presets.forEach(preset => {
+    presets.forEach( preset => {
+      // this will yell at you, but is better then dot notation
       options['test_settings'] = merge(preset, options['test_settings']);
-    });
+    } );
 
     // default envs to test, if so nothing else is set
     try {
@@ -119,8 +119,9 @@ module.exports = grunt => {
         return defaults;
       })();
     }
+
     // writing intermediary config
-    grunt.file.write(path.resolve(process.cwd(), hack), JSON.stringify(options, null, 2), null);
+    grunt.file.write( path.resolve( process.cwd(), hack ), JSON.stringify( options, null, 2 ), null);
 
     // params for the live server
     const params = {
@@ -134,7 +135,8 @@ module.exports = grunt => {
       // mount: [['/components', './node_modules']] // Mount a directory to a route.
     };
 
-    liveServer.start(params);
+    // start the live server
+    live.start(params);
 
     // this is wrapper code; we could do something amazing perhaps later on
     tasks.push( task( env.join( ',' ) ) );

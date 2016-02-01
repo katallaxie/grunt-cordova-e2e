@@ -18,32 +18,24 @@ module.exports = ( grunt ) => {
           'test_settings': {
             'ios_9_2_ipad_pro': {
               'launch_url': 'http://127.0.0.1:4723'
-            },
-            'phantomjs': {
-              "desiredCapabilities": {
-                "browserName": "phantomjs",
-                "javascriptEnabled": true,
-                "acceptSslCerts": true,
-                "phantomjs.binary.path": "/usr/local/bin/phantomjs"
-              }
             }
           }
         },
         'settings': {
-          src_folders: [ 'src' ],
+          src_folders : [ 'src' ],
           // filter for .uat
-          filter: '*.e2e.js',
+          filter : '*.e2e.js',
           // testing output
-          'output_folder': 'reports/e2e',
+          'output_folder' : 'reports/e2e',
           // custom commands
-          'custom_commands_path': 'test/cmd',
+          'custom_commands_path' : 'test/cmd',
           // page objects
-          'page_objects_path': 'test/object',
+          'page_objects_path' : 'test/object',
           // custom assertations
-          'custom_assertions_path': 'test/assert',
+          'custom_assertions_path' : 'test/assert',
           // arguments to the process; of testing environments
           argv: {
-            env: [ 'phantomjs', 'phantomjs' ]
+            env: [ 'phantomjs' ]
           }
         }
       }
