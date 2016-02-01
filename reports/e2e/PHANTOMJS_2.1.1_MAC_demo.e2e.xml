@@ -1,30 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuites errors="2"
-            failures="1"
+<testsuites errors="0"
+            failures="0"
             tests="1">
 
   <testsuite name="demo.e2e"
-    errors="2" failures="1" hostname="" id="" package="demo.e2e" skipped="0"
-    tests="1" time="7.131" timestamp="Mon, 01 Feb 2016 19:19:47 GMT">
+    errors="0" failures="0" hostname="" id="" package="demo.e2e" skipped="0"
+    tests="1" time="1.787" timestamp="Mon, 01 Feb 2016 19:38:29 GMT">
   
-    <testcase name="Test" time="7.131" assertions="2">
+    <testcase name="Test" time="1.787" assertions="2">
 
-      <failure message="Testing if element &lt;input[type=text]&gt; is visible. Element could not be located.">    at Object.visible (/Users/ewi/Gits/grunt-cordova-e2e/node_modules/nightwatch/lib/page-object/command-wrapper.js:103:25)
-    at Object.module.exports.Test (/Users/ewi/Gits/grunt-cordova-e2e/src/demo.e2e.js:7:15)
-    at Module.call (/Users/ewi/Gits/grunt-cordova-e2e/node_modules/nightwatch/lib/runner/module.js:63:34)
-    at /Users/ewi/Gits/grunt-cordova-e2e/node_modules/nightwatch/lib/runner/testcase.js:97:29
-    at _fulfilled (/Users/ewi/Gits/grunt-cordova-e2e/node_modules/q/q.js:834:54)
-    at self.promiseDispatch.done (/Users/ewi/Gits/grunt-cordova-e2e/node_modules/q/q.js:863:30)
-    at Promise.promise.promiseDispatch (/Users/ewi/Gits/grunt-cordova-e2e/node_modules/q/q.js:796:13)
-    at /Users/ewi/Gits/grunt-cordova-e2e/node_modules/q/q.js:556:49
-    at runSingle (/Users/ewi/Gits/grunt-cordova-e2e/node_modules/q/q.js:137:13)
-    at flush (/Users/ewi/Gits/grunt-cordova-e2e/node_modules/q/q.js:125:13)</failure>
+    
 
     
     </testcase>
-      <system-err>
-         ERROR: Unable to locate element: &quot;input[type=text]&quot; using: css selector
-      </system-err>
   
   
   </testsuite>

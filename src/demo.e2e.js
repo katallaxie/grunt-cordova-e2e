@@ -1,11 +1,11 @@
 module.exports = {
   'Test': function (client) {
-    var google = client.page.google();
+    var helloWorld = client.page.test();
 
-    google.navigate()
-      .assert.title('Google')
-      .assert.visible('@searchBar')
-      .setValue('@searchBar', 'nightwatch')
+    helloWorld.navigate()
+      .assert.title('Hello World')
+      .assert.visible('@search')
+      .setValue('@search', 'nightwatch')
       .click('@submit');
 
     client.end();
