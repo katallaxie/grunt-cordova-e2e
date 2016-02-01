@@ -22,3 +22,4 @@ _SpecRunner.html
 node_modules
 nightwatch.json
 .nightwatch.json
+selenium-debug.log

@@ -11,8 +11,10 @@ module.exports = grunt => {
 
   // maps
   const file = grunt.file;
+
   // intermediary .json
   const hack = '.nightwatch.json';
+
   // consts
   const runner = path.resolve(path.dirname(require.resolve('nightwatch')), '../bin/runner.js');
   const args = ['-c', hack];
@@ -20,37 +22,23 @@ module.exports = grunt => {
 
   // vars
   let env;
-  // default
-  let options = {
+
+  // defaults
+  const settings = {
     // testing source
     // folders define groups of tests
-    'src_folders': [
-      // this is for the end to end
-      'tests',
-      // this is for the smoke tests
-      'src'
-    ],
-    // filter for .uat
-    filter: '*.e2e.js',
-    // testing output
-    'output_folder': 'reports/e2e',
-    // custom commands
-    'custom_commands_path': 'lib/e2e/cmd',
-    // page objects
-    'page_objects_path': 'lib/e2e/objects',
-    // custom assertations
-    'custom_assertions_path': '',
+    'src_folders': [],
     // global parameters
     // usage: browser.globals.$variable
     // 'globals_path': 'globals.json',
     // defaults of selenium;
     // yet not starting process
     'selenium': {
-      'start_process': false,
+      'start_process': true,
       // is automatically set
       'server_path': require('selenium-standalone-jar')(),
       // log
-      'log_path': 'reports/e2e/sellenium',
+      'log_path': '',
       // hostname
       // perhaps change to use sellenium grid
       'host': '127.0.0.1',
@@ -62,6 +50,10 @@ module.exports = grunt => {
         // is used when browserName: Chrome
         'webdriver.chrome.driver': require('chromedriver').path,
         'webdriver.ie.driver': ''
+      },
+      "test_workers" : {
+        "enabled" : true,
+        "workers" : "auto"
       }
     },
     'test_settings': {
@@ -102,13 +94,16 @@ module.exports = grunt => {
   grunt.registerMultiTask('e2e', 'Run e2e test for your Cordova project', function () {
     // async
     let done = this.async(),
-      tasks = [];
+      tasks = [],
+      options;
     // defaults
-    options = this.options(options, this.data.settings);
+    options = this.options(settings, this.data.settings);
+
     // deepmerge presets on the settings
     presets.forEach(preset => {
       options['test_settings'] = merge(preset, options['test_settings']);
     });
+
     // default envs to test, if so nothing else is set
     try {
       env = [].concat(this.data.settings.argv.env);
@@ -126,9 +121,14 @@ module.exports = grunt => {
     // writing intermediary config
     grunt.file.write(path.resolve(process.cwd(), hack), JSON.stringify(options, null, 2), null);
     // queuing the envs
-    env.forEach( e => {
-      tasks.push(task(e));
-    });
+    console.log(env);
+
+    // this is wrapper code; we could do something amazing perhaps later on
+    tasks.push( task( env.join( ',' ) ) );
+
+    // env.forEach( e => {
+    //   tasks.push(task(e));
+    // });
     // check if there is something in the queue
     if (tasks.length > 0) {
       // run the task queue

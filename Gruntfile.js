@@ -9,20 +9,42 @@
 'use strict';
 
 // module
-module.exports = (grunt) => {
+module.exports = ( grunt ) => {
   // project configuration
-  grunt.initConfig({
-    e2e  : {
+  grunt.initConfig( {
+    e2e: {
       all: {
-        options : {
+        options: {
           'test_settings': {
             'ios_9_2_ipad_pro': {
               'launch_url': 'http://127.0.0.1:4723'
+            },
+            'phantomjs': {
+              "desiredCapabilities": {
+                "browserName": "phantomjs",
+                "javascriptEnabled": true,
+                "acceptSslCerts": true,
+                "phantomjs.binary.path": "/usr/local/bin/phantomjs"
+              }
             }
           }
         },
         'settings': {
-          
+          src_folders: [ 'src' ],
+          // filter for .uat
+          filter: '*.e2e.js',
+          // testing output
+          'output_folder': 'reports/e2e',
+          // custom commands
+          'custom_commands_path': 'test/cmd',
+          // page objects
+          'page_objects_path': 'test/object',
+          // custom assertations
+          'custom_assertions_path': 'test/assert',
+          // arguments to the process; of testing environments
+          argv: {
+            env: [ 'phantomjs', 'phantomjs' ]
+          }
         }
       }
     },
@@ -39,23 +61,23 @@ module.exports = (grunt) => {
     },
     // before testing anything, clear the relevant paths
     clean: {
-      test: ['build']
+      test: [ 'build' ]
     },
 
-  });
+  } );
 
   // load the plugin task
-  grunt.loadTasks('tasks');
+  grunt.loadTasks( 'tasks' );
 
   // load development tasks
-  grunt.loadNpmTasks('grunt-contrib-clean');
-  grunt.loadNpmTasks('grunt-eslint');
+  grunt.loadNpmTasks( 'grunt-contrib-clean' );
+  grunt.loadNpmTasks( 'grunt-eslint' );
 
   // when testing then first clean the relevant dirs and produce the icons
-  grunt.registerTask('test', ['clean', 'icons']);
+  grunt.registerTask( 'test', [ 'clean', 'icons' ] );
   // TODO: add unit tests
 
   // By default, lint and run all tests.
-  grunt.registerTask('default', ['eslint', 'test']);
+  grunt.registerTask( 'default', [ 'eslint', 'test' ] );
 
 };
