@@ -8,6 +8,7 @@ module.exports = grunt => {
   const path = require('path');
   const util = require('util');
   const merge = require('deepmerge');
+  const live = require('live-server');
 
   // maps
   const file = grunt.file;
@@ -19,9 +20,6 @@ module.exports = grunt => {
   const runner = path.resolve(path.dirname(require.resolve('nightwatch')), '../bin/runner.js');
   const args = ['-c', hack];
   const presets = [].concat(require('../lib/ios'));
-
-  // vars
-  let env;
 
   // defaults
   const settings = {
@@ -95,7 +93,10 @@ module.exports = grunt => {
     // async
     let done = this.async(),
       tasks = [],
-      options;
+      options,
+      env,
+      params;
+
     // defaults
     options = this.options(settings, this.data.settings);
 
@@ -120,8 +121,20 @@ module.exports = grunt => {
     }
     // writing intermediary config
     grunt.file.write(path.resolve(process.cwd(), hack), JSON.stringify(options, null, 2), null);
-    // queuing the envs
-    console.log(env);
+
+    // params for the live server
+    const params = {
+      port: 8181, // Set the server port. Defaults to 8080.
+      host: '0.0.0.0', // Set the address to bind to. Defaults to 0.0.0.0.
+      root: '/src', // Set root directory that's being server. Defaults to cwd.
+      open: false, // When false, it won't load your browser by default.
+      ignore: 'scss,my/templates', // comma-separated string for paths to ignore
+      file: 'index.html', // When set, serve this file for every 404 (useful for single-page applications)
+      wait: 1000 // Waits for all changes, before reloading. Defaults to 0 sec.
+      // mount: [['/components', './node_modules']] // Mount a directory to a route.
+    };
+
+    liveServer.start(params);
 
     // this is wrapper code; we could do something amazing perhaps later on
     tasks.push( task( env.join( ',' ) ) );
