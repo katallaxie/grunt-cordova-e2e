@@ -51,6 +51,8 @@
     "chromedriver": "^2.20.0",
     "deepmerge": "^0.2.10",
     "live-server": "^0.9.1",
+    "needle": "^1.0.0",
+    "promise": "^7.1.1",
     "selenium-standalone-jar": "^2.48.2",
     "shell": "^0.3.2",
     "simctl": "0.0.8"

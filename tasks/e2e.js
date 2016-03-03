@@ -8,10 +8,16 @@ module.exports = grunt => {
   const path = require('path');
   const util = require('util');
   const merge = require('deepmerge');
-  const live = require('live-server');
+  const needle = require('needle');
+  const fs = require('fs');
+  const promise = require('promise');
+
+  // load browserSync
+  const browserSync = require('browser-sync').create();
 
   // maps
   const file = grunt.file;
+  const log = grunt.log;
 
   // intermediary .json
   const hack = '.nightwatch.json';
@@ -59,6 +65,14 @@ module.exports = grunt => {
     }
   };
 
+  // default live variables
+  const live = {
+    port : 8080,
+    logLevel : 'debug',
+    open : false,
+    server : [ 'src' ]
+  };
+
   // run the tests
   function run (tasks, done) {
     // going parallel
@@ -83,8 +97,11 @@ module.exports = grunt => {
         },
         env: util._extend( {}, process.env )
       }, (error, result, code) => {
-        callback(code !== 0 ? `Running test failed with ${code}` : null, `Success -> Running ${env}`);
-      });
+        callback(code !== 0 ? `Running test failed with ${code}` : null, `Success -> Running ${e}`);
+
+        // delete intermediare configs
+        file.delete( hack );
+      } );
     };
   }
 
@@ -93,11 +110,71 @@ module.exports = grunt => {
     // async
     let done = this.async(),
       tasks = [],
-      options,
-      env;
+      options = this.options(settings, this.data.settings),
+      env = grunt.option('env'),
+      argv = this.data.argv || {},
+      sync = argv.live ? merge( live, argv.live || {} ) : '',
+      saucelabs = grunt.option('saucelabs');
 
-    // defaults
-    options = this.options(settings, this.data.settings);
+    // helpers
+    let runTests = () => {
+      // writing intermediary config
+      grunt.file.write( path.resolve( process.cwd(), hack ), JSON.stringify( options, null, 2 ), null);
+
+      // this is wrapper code; we could do something amazing perhaps later on
+      tasks.push( task( env.join( ',' ) ) );
+
+      // env.forEach( e => {
+      //   tasks.push(task(e));
+      // });
+      // check if there is something in the queue
+      if (tasks.length > 0) {
+        // run the task queue
+        run(tasks, done);
+      } else {
+        // delete intermediare configs
+        file.delete(hack);
+        // end, if there is nothing in the queue
+        done();
+      }
+    };
+
+    // uploading an artifact to saucelabs
+    let uploadSaucelabs = config => {
+      // files
+      config.storage.files.forEach( ( file, index, files ) => {
+        // file
+        const buffer = fs.readFileSync(file);
+        // request
+        const http = {
+          headers : {
+            'Authorization' : `Basic ${ new Buffer( `${ config.username }:${ config.token }` ).toString('base64') }`,
+            'Content-Type' : 'application/octet-stream',
+            'Content-Length' : buffer.length,
+          },
+          timeout: 5000 * 1000
+        };
+        // debug
+        log.ok( `Uploading ${ file } ...` );
+        // do the request
+        needle
+          .post(`${ config.storage.url }/${ config.username }/${ file }?${ config.storage.params }`, buffer, http, function ( error, response ) {
+            if ( ! error && response.statusCode === 200) {
+              log.ok( `Success` );
+            } else {
+              log.fail( `Error ${ error }` );
+            }
+            // check for end
+            if ( index === files.length - 1 ) {
+              done();
+            }
+          } );
+      } );
+    };
+
+    // parsing the
+    env = !! env || typeof env === 'string' ?
+      env.split(',') : [].concat(argv || 'default');
 
     // deepmerge presets on the settings
     presets.forEach( preset => {
@@ -105,54 +182,17 @@ module.exports = grunt => {
       options['test_settings'] = merge(preset, options['test_settings']);
     } );
 
-    // default envs to test, if so nothing else is set
-    try {
-      env = [].concat(this.data.settings.argv.env);
-    } catch (e) {
-      env = (() => {
-        let defaults = [];
-        presets.forEach(preset => {
-          for (let prop in preset) {
-            defaults.push(prop);
-          }
-        });
-        return defaults;
-      })();
-    }
-
-    // writing intermediary config
-    grunt.file.write( path.resolve( process.cwd(), hack ), JSON.stringify( options, null, 2 ), null);
-
-    // params for the live server
-    const params = {
-      port: 8181, // Set the server port. Defaults to 8080.
-      host: '0.0.0.0', // Set the address to bind to. Defaults to 0.0.0.0.
-      root: 'src', // Set root directory that's being server. Defaults to cwd.
-      open: false, // When false, it won't load your browser by default.
-      // ignore: 'scss,my/templates', // comma-separated string for paths to ignore
-      file: 'index.html', // When set, serve this file for every 404 (useful for single-page applications)
-      wait: 1000 // Waits for all changes, before reloading. Defaults to 0 sec.
-      // mount: [['/components', './node_modules']] // Mount a directory to a route.
-    };
-
-    // start the live server
-    live.start(params);
-
-    // this is wrapper code; we could do something amazing perhaps later on
-    tasks.push( task( env.join( ',' ) ) );
-
-    // env.forEach( e => {
-    //   tasks.push(task(e));
-    // });
-    // check if there is something in the queue
-    if (tasks.length > 0) {
-      // run the task queue
-      run(tasks, done);
+    if ( saucelabs && !! argv.saucelabs ) {
+      uploadSaucelabs(argv.saucelabs);
+      // done();
     } else {
-      // delete intermediare configs
-      file.delete(hack);
-      // end, if there is nothing in the queue
-      done();
+      if ( sync ) {
+        browserSync.init(sync, runTests);
+      } else {
+          runTests();
+      }
     }
+
   });
+
 };
