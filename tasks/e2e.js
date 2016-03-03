@@ -174,7 +174,7 @@ module.exports = grunt => {
 
     // parsing the
     env = !! env || typeof env === 'string' ?
-      env.split(',') : [].concat(argv || 'default');
+      env.split(',') : [].concat(argv.env || 'default');
 
     // deepmerge presets on the settings
     presets.forEach( preset => {
