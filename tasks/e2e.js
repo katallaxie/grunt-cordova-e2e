@@ -10,7 +10,7 @@ module.exports = grunt => {
   const merge = require('deepmerge');
   const needle = require('needle');
   const fs = require('fs');
-  const promise = require('promise');
+  // const promise = require('promise');
 
   // load browserSync
   const browserSync = require('browser-sync').create();
