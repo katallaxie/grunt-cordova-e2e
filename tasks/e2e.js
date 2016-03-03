@@ -158,7 +158,7 @@ module.exports = grunt => {
         log.ok( `Uploading ${ file } ...` );
         // do the request
         needle
-          .post(`${ config.storage.url }/${ config.username }/${ file }?${ config.storage.params }`, buffer, http, function ( error, response ) {
+          .post(`${ config.storage.url }/${ config.username }/${ file.replace(/^.*[\\\/]/, '') }?${ config.storage.params }`, buffer, http, function ( error, response ) {
             if ( ! error && response.statusCode === 200) {
               log.ok( `Success` );
             } else {
