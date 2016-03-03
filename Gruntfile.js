@@ -30,8 +30,8 @@ module.exports = ( grunt ) => {
           //   server : [ 'src' ]
           // },
           saucelabs : {
-            username : 'sebastian_doell',
-            token : '088fceb5-2a87-4324-8ffc-50e34e3dcb75',
+            username : '',
+            token : '',
             storage : {
               url : 'https://saucelabs.com/rest/v1/storage',
               params : 'overwrite=true',
@@ -60,7 +60,7 @@ module.exports = ( grunt ) => {
               'username': 'sebastian_doell',
               'output': true,
               // 'silent': true,
-              'access_key': '088fceb5-2a87-4324-8ffc-50e34e3dcb75',
+              'access_key': '',
               'screenshots': {
                 'enabled': false,
                 'on_failure': true
